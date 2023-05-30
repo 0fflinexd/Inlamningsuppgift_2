@@ -2,6 +2,7 @@ import supertest from "supertest";
 import { expect } from "chai";
 import dotenv from 'dotenv';
 import { createRandomComment } from "../helpers/comments_helper";
+import { createRandomUser } from "../helpers/user_helper";
 
 // Configuration
 dotenv.config();
@@ -14,6 +15,18 @@ const token = process.env.USER_TOKEN;
 describe('/comments route | Check for comments', () => {
     let userId = null;
     let postId = null;
+
+    it('POST /users | Create user', async () => {
+        const data = createRandomUser();
+        const res = await request
+            .post('users')
+            .set('Authorization', `Bearer ${token}`)
+            .send(data);
+
+        console.log(res.body.data);
+        userId = res.body.data;
+        
+    });
 
     it('GET /posts', async () => {
         const res = await request.get('posts')
