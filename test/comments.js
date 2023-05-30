@@ -8,12 +8,12 @@ import { createRandomPost } from "../helpers/post_helper";
 // Configuration
 dotenv.config();
 
-// Requset
-const request = supertest('https://gorest.co.in/public/v2/');
-const token = process.env.USER_TOKEN;
 
 // Mocha test cases
 describe('/comments route | Check for comments', () => {
+    /* Setup */
+    const request = supertest('https://gorest.co.in/public/v2/');
+    const token = process.env.USER_TOKEN;
     let userId = null;
     let postId = null;
 
@@ -23,11 +23,12 @@ describe('/comments route | Check for comments', () => {
         const res = await request
             .post('users')
             .set('Authorization', `Bearer ${token}`)
-            .send(createRandomUser);
+            .send(createRandomUser());
 
         userId = res.body.data;
         console.log(res.body); 
     });
+    
 /*
             after(async () => {
                 //this.retries(4);
@@ -58,9 +59,10 @@ describe('/comments route | Check for comments', () => {
     });
 */
 
-    it('POST /posts | Create a post', async () => {
-        this.retries(4);
+    it('POST /posts | Create a post', async function() {
+        this.retries(4); // Vad är detta? fungerar när jag bytte ut till function() eller var det något annat?
         const data = createRandomPost(userId);
+        console.log(data);
         const res = await request
             .post('posts')
             .set('Authorization', `Bearer ${token}`)
@@ -79,7 +81,7 @@ describe('/comments route | Check for comments', () => {
     });
     */
 
-    it.skip('GET /comments', async () => {
+    it('GET /comments', async () => {
         const res = await request.get('comments');
         //console.log(res.body);
         expect(res.body).to.not.be.empty;
