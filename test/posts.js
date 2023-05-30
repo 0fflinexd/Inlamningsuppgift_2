@@ -13,18 +13,18 @@ describe.only('/posts route', () => {
     const token = process.env.USER_TOKEN;
     let userId = null;
     let postId = null;
-    /* Creating a fresh user so we have one to work with */
+    /* skapar en ny användare */
     before(async () => {
     const res = await request.post('users').set('Authorization', `Bearer ${token}`).send(createRandomUser());
-    console.log(res.body.data);
-    userId = res.body.data.id;
+    userId = res.body;
+    
     });
 
     // Börja skriva tester
     it('GET /posts', async () => {
         const res = await request.get('posts')
-        expect(res.body.data).to.not.be.empty;
-        console.log(res.body.data);
+        console.log(res.body);
+        expect(res.body).to.not.be.empty;
     });
 
     /* Cleanup */
