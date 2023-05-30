@@ -10,7 +10,7 @@ dotenv.config();
 
 
 // Mocha test cases
-describe('/comments route | Check for comments', () => {
+describe.only('/comments route | Check for comments', () => {
     /* Setup */
     const request = supertest('https://gorest.co.in/public/v2/');
     const token = process.env.USER_TOKEN;
@@ -18,86 +18,37 @@ describe('/comments route | Check for comments', () => {
     let postId = null;
 
 
-    // Create a user
+    // Create a user and post so there is something to work with
     before(async () => {
-        const res = await request
+        // Create a user
+        let res = await request
             .post('users')
             .set('Authorization', `Bearer ${token}`)
             .send(createRandomUser());
 
-        userId = res.body.data;
-        console.log(res.body); 
-    });
-    
-/*
-            after(async () => {
-                //this.retries(4);
-                const data = createRandomPost(userId);
-                const res = await request
-                    .post('posts')
-                    .set('Authorization', `Bearer ${token}`)
-                    .send(data);
+        userId = res.body.id;
+        console.log(res.body);
 
-            postId = res.body.data;
-            console.log(res.body);
-            });    
-    });
-*/
-
-    
-/*
-      //Gjorde en before på detta istället
-    it.only('POST /users | Create user', async () => {
-        const data = createRandomUser();
-        const res = await request
-            .post('users')
-            .set('Authorization', `Bearer ${token}`)
-            .send(data);
-
-        userId = res.body.data;
-        console.log(res.body);   
-    });
-*/
-
-    it('POST /posts | Create a post', async function() {
-        this.retries(4); // Vad är detta? fungerar när jag bytte ut till function() eller var det något annat?
+        // Create a post
         const data = createRandomPost(userId);
-        console.log(data);
-        const res = await request
+        res = await request
             .post('posts')
             .set('Authorization', `Bearer ${token}`)
             .send(data);
 
-        postId = res.body.data;
+        postId = res.body.id;
         console.log(res.body);
     });
 
-
-    /* Överflödig kod?
-    it('GET /posts', async () => {
-        const res = await request.get('posts')
-        //console.log(res.body[0])
-        postId = res.body[0].id
-    });
-    */
-
     it('GET /comments', async () => {
         const res = await request.get('comments');
-        //console.log(res.body);
         expect(res.body).to.not.be.empty;
-        //console.log(res.status);
+        //console.log(res.body);
     });
 
-    /* Denna fungerar inte på comments, för den finns inga konstanta parameters
-    it('GET /comments | Query parameters', async () => {
-        const url = `comments?access-token=${token}&`
-    });
-    */
-
-    it.skip('POST /comments | Create comment', async () => {
-        
-        const data = createRandomComment(postId);
-        data.id = postId;
+    it('POST /comments | Create comment', async () => { 
+        const data = createRandomComment(userId, postId);
+        //data.id = postId;
         //console.log(data);
         const res = await request
             .post('comments')
@@ -105,8 +56,17 @@ describe('/comments route | Check for comments', () => {
             .send(data);
 
             
-           // userId = res.body.data.id;
-           console.log(res.body)
-
+        // userId = res.body.id;
+        expect(res.body.email).to.contain('jenseneducation');
+        console.log(res.body);
     });
+
+    /* Cleanup */
+    after(async () => {
+        const res = await request
+            .delete(`users/${userId}`)
+            .set('Authorization', `Bearer ${token}`)
+        //console.log(res.body);
+    });
+    
 });
