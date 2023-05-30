@@ -16,13 +16,15 @@ describe.only('/posts route', () => {
     /* Creating a fresh user so we have one to work with */
     before(async () => {
     const res = await request.post('users').set('Authorization', `Bearer ${token}`).send(createRandomUser());
+    console.log(res.body.data);
     userId = res.body.data.id;
     });
 
     // Börja skriva tester
-    it('GET /posts', async() => {
+    it('GET /posts', async () => {
         const res = await request.get('posts')
-        console.log(res.body.data.id);
+        expect(res.body.data).to.not.be.empty;
+        console.log(res.body.data);
     });
 
     /* Cleanup */
