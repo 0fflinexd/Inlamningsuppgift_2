@@ -13,7 +13,7 @@ const request = supertest('https://gorest.co.in/public/v2/');
 const token = process.env.USER_TOKEN;
 
 // Mocha test cases
-describe.only('/comments route | Check for comments', () => {
+describe('/comments route | Check for comments', () => {
     let userId = null;
     let postId = null;
 
