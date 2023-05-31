@@ -50,6 +50,29 @@ describe('/posts route', () => {
 
     });
 
+    it('PUT /posts/:id', async () => {
+        const data = {
+            title: 'New title change',
+            body: 'New body change'
+        };
+
+        const res = await request.put(`posts/${postId}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(data);
+            //console.log(data.title);
+            //console.log(data.body);
+        expect(res.body.title).to.eq(data.title);
+        expect(res.body.body).to.eq(data.body);
+
+    });
+    it('DELETE /posts/:id', async () => {
+        const res = await request.delete(`posts/${postId}`)
+            .set('Authorization', `Bearer ${token}`);
+            
+        console.log(res.body);
+        expect(res.body).to.eq(null);
+    });
+
     
 
     /* Cleanup */
