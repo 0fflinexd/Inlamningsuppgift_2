@@ -9,7 +9,7 @@ dotenv.config();
 
 describe.only('/posts route', () => {
     /* Setup */
-    const request = supertest('https://gorest.co.in/public/v2/posts');
+    const request = supertest('https://gorest.co.in/public/v2/');
     const token = process.env.USER_TOKEN;
     let userId = null;
     let postId = null;
