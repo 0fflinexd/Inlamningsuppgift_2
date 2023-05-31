@@ -7,7 +7,7 @@ import { createRandomUser } from "../helpers/user_helper";
 // Configuration
 dotenv.config();
 
-describe('/posts route', () => {
+describe.only('/posts route', () => {
     /* Setup */
     const request = supertest('https://gorest.co.in/public/v2/');
     const token = process.env.USER_TOKEN;
@@ -15,16 +15,24 @@ describe('/posts route', () => {
     let postId = null;
     /* skapar en ny användare */
     before(async () => {
-    const res = await request.post('users').set('Authorization', `Bearer ${token}`).send(createRandomUser());
-    userId = res.body;
+        const res = await request.post('users').set('Authorization', `Bearer ${token}`).send(createRandomUser());
+        userId = res.body;
+        //console.log(userId); //Kontrolera att det finns en ny användare
     
     });
 
     // Börja skriva tester
     it('GET /posts', async () => {
         const res = await request.get('posts')
-        console.log(res.body);
+        //console.log(res.body); //Kontrolera att det finns posts
         expect(res.body).to.not.be.empty;
+    });
+
+    it('POST /posts', async () => {
+        const data = createRandomPost(userId);
+        const res = await request.post('posts')
+            .set('Authorization',`Bearer ${token}`) 
+            .send(data);
     });
 
     /* Cleanup */
