@@ -16,6 +16,7 @@ describe('/comments route | Check for comments', () => {
     const token = process.env.USER_TOKEN;
     let userId = null;
     let postId = null;
+    let commentId = null;
 
 
     // Create a user and post so there is something to work with
@@ -27,7 +28,8 @@ describe('/comments route | Check for comments', () => {
             .send(createRandomUser());
 
         userId = res.body.id;
-        console.log(res.body);
+        //console.log(res.body);
+        // Ska jag ha med expect på helpers?
 
         // Create a post
         const data = createRandomPost(userId);
@@ -37,7 +39,8 @@ describe('/comments route | Check for comments', () => {
             .send(data);
 
         postId = res.body.id;
-        console.log(res.body);
+        //console.log(res.body);
+        // Ska jag ha med expect på helpers?
     });
 
     it('GET /comments', async () => {
@@ -56,8 +59,33 @@ describe('/comments route | Check for comments', () => {
             .send(data);
 
             
-        // userId = res.body.id;
+        commentId = res.body.id;
         expect(res.body.email).to.contain('jenseneducation');
+        //console.log(res.body.id);
+    });
+
+    it ('POST /comments | Create comment (Negative)', async () => {
+        const data = {};
+        const res = await request
+            .post('comments')
+            .set('Authorization', `Bearer ${token}`)
+            .send(data);
+
+        expect(res.status).to.eq(422);
+        //console.log(res.status);
+    });
+
+    it ('PUT /comments:id | Change comment', async () => {
+        const data = {
+            name: 'Test Testsson',
+            email: 'Test.Testsson@jenseneducation.se',
+            body: 'Lets change this comment to something else!'
+        };
+
+        const res = await request.put(`comments/${commentId}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(data);
+
         console.log(res.body);
     });
 
