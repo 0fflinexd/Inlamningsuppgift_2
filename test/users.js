@@ -14,7 +14,7 @@ describe.only('/users route', () => {
 const request = supertest('https://gorest.co.in/public/v2/');
 const token = process.env.USER_TOKEN;
 
-let userID = null; 
+let userId = null; 
 
 it ('GET/users', async () => {
     const res = await request.get('users');
@@ -35,7 +35,7 @@ it('POST/ users | Create a new user', async () => {
     const data=createRandomUser();
 
     const res = await request
-    .post('/users')
+    .post('users')
     .set('Authorization', `Bearer ${token}`)
     .send(data);
 
