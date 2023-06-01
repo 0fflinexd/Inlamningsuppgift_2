@@ -10,7 +10,7 @@ dotenv.config();
 
 
 // Mocha test cases
-describe('/comments route | Check for comments', () => {
+describe.only('/comments route | Check for comments', () => {
     /* Setup */
     const request = supertest('https://gorest.co.in/public/v2/');
     const token = process.env.USER_TOKEN;
@@ -28,6 +28,7 @@ describe('/comments route | Check for comments', () => {
             .send(createRandomUser());
 
         userId = res.body.id;
+        //console.log(res.body.id);
         //console.log(res.body);
         // Ska jag ha med expect på helpers?
 
@@ -86,7 +87,7 @@ describe('/comments route | Check for comments', () => {
             .set('Authorization', `Bearer ${token}`)
             .send(data);
 
-        console.log(res.body);
+        //console.log(res.body);
     });
 
     /* Cleanup */
