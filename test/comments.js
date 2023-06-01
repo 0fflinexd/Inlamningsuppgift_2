@@ -10,13 +10,14 @@ dotenv.config();
 
 
 // Mocha test cases
-describe('/comments route | Check for comments', () => {
+describe.only('/comments route | Check for comments', () => {
     /* Setup */
     const request = supertest('https://gorest.co.in/public/v2/');
     const token = process.env.USER_TOKEN;
     let userId = null;
     let postId = null;
     let commentId = null;
+    let positiveComment = null;
 
 
     // Create a user and post so there is something to work with
@@ -42,6 +43,7 @@ describe('/comments route | Check for comments', () => {
     it('GET /comments | Get comments', async () => {
         const res = await request
         .get('comments');
+
         expect(res.body).to.not.be.empty;
     });
 
@@ -78,9 +80,21 @@ describe('/comments route | Check for comments', () => {
             .set('Authorization', `Bearer ${token}`)
             .send(data);
 
+        positiveComment = data;
         expect(res.body.name).to.eq('Test Testsson');
-        expect(res.body.email).to.eq('Test.Testsson@jenseneducation.se')
-        expect(res.body.body).to.eq('Lets change this comment to something else!')
+        expect(res.body.email).to.eq('Test.Testsson@jenseneducation.se');
+        expect(res.body.body).to.eq('Lets change this comment to something else!');
+    });
+
+    it('PUT /comments:id | Change comment (Negative)', async () => {
+        const data = {};
+        const res = await request
+            .put(`comments/${commentId}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(data);
+
+        expect(res.body).to.contain(positiveComment);
+        expect(data).to.be.empty;
     });
 
     it('DELETE /comments:id | Delete comment', async () => {
@@ -88,7 +102,7 @@ describe('/comments route | Check for comments', () => {
             .delete(`comments/${commentId}`)
             .set('Authorization', `Bearer ${token}`);
 
-        expect(res.status).to.eq(204)
+        expect(res.status).to.eq(204);
     });
 
     it('DELETE /comments:id | Delete comment (Negative)', async () => {
@@ -96,7 +110,8 @@ describe('/comments route | Check for comments', () => {
             .delete(`comments${commentId}`)
             .set('Authorization', `Bearer ${token}`);
 
-        expect(res.status).to.equal(404)
+        expect(res.status).to.equal(404);
+        expect(res.body).to.be.empty;
     });
 
     /* Cleanup */
