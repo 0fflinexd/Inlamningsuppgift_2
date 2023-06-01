@@ -10,7 +10,7 @@ dotenv.config();
 
 
 // Mocha test cases
-describe.only('/comments route | Check for comments', () => {
+describe('/comments route | Check for comments', () => {
     /* Setup */
     const request = supertest('https://gorest.co.in/public/v2/');
     const token = process.env.USER_TOKEN;
