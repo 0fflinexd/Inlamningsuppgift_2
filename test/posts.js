@@ -28,7 +28,6 @@ describe('/posts route', () => {
     });
 
     it('POST /posts', async function() {
-        //this.retries(5);
         const data = createRandomPost(userId);
         const res = await request.post('posts')
             .set('Authorization',`Bearer ${token}`) 
@@ -71,8 +70,6 @@ describe('/posts route', () => {
         const res = await request.put(`posts/${postId}`)
             .set('Authorization', `Bearer ${token}`)
             .send(data);
-        //expect(res.body.title).to.eq(data.title);
-        //expect(res.body.body).to.eq(data.body);
         expect(res.status).to.eql(404);
 
     });
