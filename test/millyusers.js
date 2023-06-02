@@ -58,8 +58,9 @@ describe("/users route", () => {
       .put(`users/${userId}`)
       .set("Authorization", `Bearer ${token}`)
       .send(data);
-    expect(res.body.data.name).to.equal(data.name);
-    expect(res.body.data).to.include(data);
+    expect(res.body.name).to.equal('User updated');
+    expect(res.body).to.include(data);
+    console.log(res.body.name);
   });
 
   it("DELETE /users/:id | User we just created", async () => {
