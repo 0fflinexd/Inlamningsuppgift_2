@@ -44,10 +44,14 @@ describe("/users route", () => {
     expect(res.body.id).to.eq(userId);
     
   });
+  it('GET /users/: id | User we just created', async () => {
+    const res = await request.get(`users/${userId}?access-token=${token}`);
+    expect(res.body.id).to.eq(userId);
+   }); 
 
   it("PUT /users/:id | Change the user", async () => {
     const data = {
-      name: "Garibrat"
+      name: "User updated"
     };
     console.log("userID", userId)
     const res = await request
@@ -67,12 +71,12 @@ describe("/users route", () => {
 
   it("GET /users/:id (Negative)", async () => {
     const res = await request.get(`users/${userId}`);
-    expect(res.body.data.message).to.eq("Resource not found");
+    expect(res.body.message).to.eq("Resource not found");
   });
   it("DELETE /users/:id (Negative)", async () => {
     const res = await request
       .delete(`users/${userId}`)
       .set("Authorization", `Bearer ${token}`);
-    expect(res.body.data.message).to.equal("Resource not found");
+    expect(res.body.message).to.equal("Resource not found");
   });
 });
