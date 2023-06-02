@@ -87,14 +87,18 @@ describe('/comments route | Check for comments', () => {
     });
 
     it('PUT /comments:id | Change comment (Negative)', async () => {
-        const data = {};
+        const data = {
+            name:'',
+            email: '',
+            body: ''
+        };
         const res = await request
             .put(`comments/${commentId}`)
             .set('Authorization', `Bearer ${token}`)
             .send(data);
 
-        expect(res.body).to.contain(positiveComment);
-        expect(data).to.be.empty;
+        expect(res.status).to.eq(422);
+        //console.log(res.body);
     });
 
     it('DELETE /comments:id | Delete comment', async () => {
