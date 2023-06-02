@@ -7,7 +7,7 @@ import { createRandomUser } from "../helpers/user_helper";
 // Configuration
 dotenv.config();
 
-describe('/posts route', () => {
+describe.only('/posts route', () => {
     /* Setup */
     const request = supertest('https://gorest.co.in/public/v2/');
     const token = process.env.USER_TOKEN;
@@ -46,7 +46,7 @@ describe('/posts route', () => {
             expect(res.status).to.eql(201);
 
             postId = res.body.id;
-            console.log(res.body);
+            //console.log(res.body);
 
     });
 
@@ -68,8 +68,11 @@ describe('/posts route', () => {
     it('DELETE /posts/:id', async () => {
         const res = await request.delete(`posts/${postId}`)
             .set('Authorization', `Bearer ${token}`);
-            
+
+        console.log(postId);
+        console.log("heej");    
         console.log(res.body);
+        console.log("heej");
         expect(res.body).to.eq(null);
     });
 
