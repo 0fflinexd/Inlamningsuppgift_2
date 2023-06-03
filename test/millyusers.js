@@ -1,82 +1,83 @@
-import supertest from 'supertest';
-import {expect} from 'chai';
-import dotenv from 'dotenv';
-import { createRandomUser } from '../helpers/user_helper';
+import supertest from "supertest";
+import { expect } from "chai";
+import dotenv from "dotenv";
+import { createRandomUser } from "../helpers/user_helper";
 
 //Configuration
 dotenv.config();
 
 //Request
-const request = supertest('https://gorest.co.in/public-api/');
+const request = supertest("https://gorest.co.in/public/v2/");
 const token = process.env.USER_TOKEN;
 
 //Mocha test case
-describe('/users route', () => {
-    let userId=null;
-    it('GET /users', async () => {
-        const res = await request.get('users');
-        expect(res.body.data).to.not.be.empty;
- });
-it ('GET /users | query parameters', async () => {
-    const url = `users?access-token=${token}&gender=female&status=active`;
+describe("/users route", () => {
+  let userId = null;
+
+  it("GET /users", async () => {
+    const res = await request.get("users");
+    console.log("body", res.body);
+    expect(res.status).to.equal(200);
+    expect(res.body).to.not.be.empty;
+  });
+
+  it("GET /users | query parameters", async () => {
+    const url = `users?access-token=${token}&gender=female&status=inactive`;
     const res = await request.get(url);
-    res.body.data.forEach((user) => {
-        expect(user.gender).to.eq('female');
-        expect(user.status).to.eq('active');
+    res.body.forEach((user) => {
+      expect(user.gender).to.eq("female");
+      expect(user.status).to.eq("inactive");
     });
-});
-it('POST /users', async () => {
+  });
+
+  it("POST /users | Create a new user", async () => {
     const data = createRandomUser();
     const res = await request
-        .post('users')
-        .set('Authorization', `Bearer ${token}`)
-        .send(data);
-
-        // console.log(res.body.data);
-        expect(res.body.data).to.include(data);
-        expect(res.body.data).to.have.property('id');
-        expect(res.body.data).to.have.property('email');
-        userId = res.body.data.id; 
-}); /*
-it('POST /users | Negative', async () => {
-    const data = {};
-    const res = await request
-    .post('users')
-    .set('Authorization', `Bearer ${token}`)
-    .send(data);
-
-    expect(res.body.code).to.eq(422);
-});
-it('GET /users/: id | User we just created', async () => {
+      .post("users")
+      .set("Authorization", `Bearer ${token}`)
+      .send(data);
+    //console.log(res.body);
+    userId = res.body.id;
+    
+    console.log("userID in post", userId)
+    expect(res.status).to.eq(201);
+    expect(res.body.id).to.eq(userId);
+    
+  });
+  it('GET /users/: id | User we just created', async () => {
     const res = await request.get(`users/${userId}?access-token=${token}`);
-    expect(res.body.data.id).to.eq(userId);
-   
-});
-it ('PUT /users/:id', async () => {
+    expect(res.body.id).to.eq(userId);
+   }); 
+
+  it("PUT /users/:id | Change the user", async () => {
     const data = {
-        name:'Test user updated'
+      name: "User updated"
     };
-    const res = await request.put(`users/${userId}`)
-    .set('Authorization', `Bearer ${token}`)
-    .send(data); 
+    console.log("userID", userId)
+    const res = await request
+      .put(`users/${userId}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send(data);
+    expect(res.body.name).to.equal('User updated');
+    expect(res.body).to.include(data);
+    console.log(res.body.name);
+  });
 
-    expect(res.body.data.name).to.equal(data.name);
-    expect(res.body.data).to.include(data);
+  it("DELETE /users/:id | User we just created", async () => {
+    const res = await request
+      .delete(`users/${userId}`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(res.status).to.eq(204);
+  });
 
-    //console.log(res.body.data); 
-});
-it('DELETE /users/:id | User we just created', async () => {
-    const res = await request.delete(`users/${userId}`)
-    .set('Authorization', `Bearer ${token}`);
-    expect(res.body.data).to.be.null;
-});
-it ('GET /users/:id | Negative', async () => {
+  it("GET /users/:id (Negative)", async () => {
     const res = await request.get(`users/${userId}`);
-    expect(res.body.data.message).to.eq('Resource not found');
-});
-it ('DELETE /users/;id | Negative', async () => {
-    const res = await request.delete(`users/${userId}`)
-    .set('Authorization', `Bearer ${token}`);
-    expect(res.body.data.message).to.equal('Resource not found'); 
-});*/
+    expect(res.body.message).to.eq("Resource not found");
+  });
+  it("DELETE /users/:id (Negative)", async () => {
+    const res = await request
+      .delete(`users/${userId}`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(res.body.message).to.equal("Resource not found");
+  });
 });

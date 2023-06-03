@@ -8,7 +8,6 @@ import { createRandomPost } from "../helpers/post_helper";
 // Configuration
 dotenv.config();
 
-
 // Mocha test cases
 describe('/comments route | Check for comments', () => {
     /* Setup */
@@ -17,8 +16,6 @@ describe('/comments route | Check for comments', () => {
     let userId = null;
     let postId = null;
     let commentId = null;
-    let positiveComment = null;
-
 
     // Create a user and post so there is something to work with
     before(async () => {
@@ -80,21 +77,23 @@ describe('/comments route | Check for comments', () => {
             .set('Authorization', `Bearer ${token}`)
             .send(data);
 
-        positiveComment = data;
-        expect(res.body.name).to.eq('Test Testsson');
-        expect(res.body.email).to.eq('Test.Testsson@jenseneducation.se');
-        expect(res.body.body).to.eq('Lets change this comment to something else!');
+        expect(res.body.name).to.eq(data.name);
+        expect(res.body.email).to.eq(data.email);
+        expect(res.body.body).to.eq(data.body);
     });
-
     it('PUT /comments:id | Change comment (Negative)', async () => {
-        const data = {};
+        const data = {
+            name:'',
+            email: '',
+            body: ''
+        };
         const res = await request
             .put(`comments/${commentId}`)
             .set('Authorization', `Bearer ${token}`)
             .send(data);
 
-        expect(res.body).to.contain(positiveComment);
-        expect(data).to.be.empty;
+        expect(res.status).to.eq(422);
+        //console.log(res.body);
     });
 
     it('DELETE /comments:id | Delete comment', async () => {
@@ -103,6 +102,7 @@ describe('/comments route | Check for comments', () => {
             .set('Authorization', `Bearer ${token}`);
 
         expect(res.status).to.eq(204);
+        expect(res.body).to.be.empty;
     });
 
     it('DELETE /comments:id | Delete comment (Negative)', async () => {
