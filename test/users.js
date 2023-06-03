@@ -8,7 +8,7 @@ import {createRandomUser} from '../helpers/user_helper';
 dotenv.config();
 
 //Mocha test case
-describe.only('/users route', () => {
+describe('/users route', () => {
  
 // Request
 const request = supertest('https://gorest.co.in/public/v2/');
@@ -59,7 +59,7 @@ it('PUT /users/:id | Update the user', async () => {
     expect(res.body.data.name).to.equal(data.name);
     expect(res.body.data).to.include(data);
 
-  // console.log(res.body); 
+   // console.log(res.body); 
 });
 it('DELETE /users/:id | User we just created', async () => {
     const res = await request
