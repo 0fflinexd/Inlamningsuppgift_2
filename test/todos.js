@@ -8,7 +8,7 @@ import { createRandomTodo } from "../helpers/todos_helper";
 dotenv.config();
 
 //Setup mocha
-describe.only('/todos route', () => {
+describe('/todos route', () => {
     // Setup
     const request = supertest('https://gorest.co.in/public/v2/');
     const token = process.env.USER_TOKEN;
