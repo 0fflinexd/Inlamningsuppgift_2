@@ -16,7 +16,7 @@ describe("/users route", () => {
 
   it("GET /users", async () => {
     const res = await request.get("users");
-    console.log("body", res.body);
+    //console.log("body", res.body);
     expect(res.status).to.equal(200);
     expect(res.body).to.not.be.empty;
   });
@@ -39,7 +39,7 @@ describe("/users route", () => {
     //console.log(res.body);
     userId = res.body.id;
     
-    console.log("userID in post", userId)
+    //console.log("userID in post", userId)
     expect(res.status).to.eq(201);
     expect(res.body.id).to.eq(userId);
     
@@ -53,14 +53,14 @@ describe("/users route", () => {
     const data = {
       name: "User updated"
     };
-    console.log("userID", userId)
+    //console.log("userID", userId)
     const res = await request
       .put(`users/${userId}`)
       .set("Authorization", `Bearer ${token}`)
       .send(data);
     expect(res.body.name).to.equal('User updated');
     expect(res.body).to.include(data);
-    console.log(res.body.name);
+    //console.log(res.body.name);
   });
 
   it("DELETE /users/:id | User we just created", async () => {
