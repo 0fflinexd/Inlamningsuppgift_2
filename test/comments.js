@@ -93,7 +93,6 @@ describe('/comments route | Check for comments', () => {
             .send(data);
 
         expect(res.status).to.eq(422);
-        //console.log(res.body);
     });
 
     it('DELETE /comments:id | Delete comment', async () => {
