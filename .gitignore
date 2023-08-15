@@ -1,4 +1,8 @@
-node_modules/
-mochawesome-report/
+# Files
 .package-lock.json
 .env
+test-results.xml
+
+# Foldes
+node_modules/
+mochawesome-report/

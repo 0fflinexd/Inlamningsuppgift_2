@@ -6,7 +6,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha --no-timeouts"
+    "test": "mocha --no-timeouts",
+    "test-mochawesome": "mocha --no-timeouts --reporter mochawesome",
+    "test-junit": "mocha --no-timeouts --reporter mocha-junit-reporter"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +24,7 @@
     "chai": "^4.3.7",
     "dotenv": "^16.0.3",
     "mocha": "^10.2.0",
+    "mocha-junit-reporter": "^2.2.0",
     "mochawesome": "^7.1.3",
     "supertest": "^6.3.3"
   },
