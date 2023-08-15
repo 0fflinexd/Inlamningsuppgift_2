@@ -10,8 +10,9 @@ dotenv.config();
 
 describe('/posts route', () => {
     /* Setup */
-    const request = supertest('https://gorest.co.in/public/v2/');
-    const token = process.env.USER_TOKEN;
+    const request = supertest(process.env.SUPERTEST_BASE_URL);
+    const token = process.env.SUPERTEST_USER_TOKEN;
+    const debug = process.env.SUPERTEST_DEBUG == 1 ? true : false;
     let userId = null;
     let postId = null;
     /* skapar en ny användare */
